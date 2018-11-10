@@ -14,9 +14,12 @@ class MainModel extends Model {
   List<String> dropDownItmes = [];
   List<CategoriesModel> categoriData = [];
   bool dataAdded = true;
+  bool isLoading = false;
 
   Future fetchCategories() async {
-   
+    categoriData.clear();
+    isLoading = true;
+    notifyListeners();
     final response =
         await http.get('https://mashhadsafari.com/tmp/getcategories.php');
     List<dynamic> data = json.decode(response.body);
@@ -34,7 +37,10 @@ class MainModel extends Model {
       categoriData.add(categories);
       notifyListeners();
     });
-     return categoriData;
+
+    isLoading = false;
+    notifyListeners();
+    return categoriData;
   }
 
   loadListItem() {
@@ -57,27 +63,96 @@ class MainModel extends Model {
 
   Future addCategories(
       CategoriesModel newCategorie, File newCategoriImage) async {
-    var stream =
-        http.ByteStream(DelegatingStream.typed(newCategoriImage.openRead()));
-    var length = await newCategoriImage.length();
-    var url = Uri.parse("https://mashhadsafari.com/tmp/addcategory.php");
-    var request = http.MultipartRequest("POST", url);
-    var multipartFile = http.MultipartFile("categorie_icon", stream, length,
-        filename: basename(newCategoriImage.path));
-    request.files.add(multipartFile);
-    request.fields['categoie_name'] = newCategorie.categoie_name;
-    request.fields['categorie_des'] = newCategorie.categorie_des;
-    request.fields['categorie_state'] = newCategorie.categorie_state;
+    // if Categori has Icon File
+    if (newCategoriImage != null) {
+      var stream =
+          http.ByteStream(DelegatingStream.typed(newCategoriImage.openRead()));
+      var length = await newCategoriImage.length();
+      var url = Uri.parse("https://mashhadsafari.com/tmp/addcategory.php");
+      var request = http.MultipartRequest("POST", url);
+      var multipartFile = http.MultipartFile("categorie_icon", stream, length,
+          filename: basename(newCategoriImage.path));
+      request.files.add(multipartFile);
+      request.fields['categoie_name'] = newCategorie.categoie_name;
+      request.fields['categorie_des'] = newCategorie.categorie_des;
+      request.fields['categorie_state'] = newCategorie.categorie_state;
+      request.send().then((resopnse) {
+        if (resopnse.statusCode == 200) {
+          print("Upload Data Ok");
+          dataAdded = true;
+          notifyListeners();
+        } else {
+          print("Error to Upload Data:${resopnse.statusCode} ");
+        }
+      });
+    }
+    // if categori has not Icon file . send empty image to data base
+    else {
+      var url = Uri.parse("https://mashhadsafari.com/tmp/addcategory.php");
+      var request = http.MultipartRequest("POST", url);
+      request.fields['categoie_name'] = newCategorie.categoie_name;
+      request.fields['categorie_des'] = newCategorie.categorie_des;
+      request.fields['categorie_icon'] = "";
+      request.fields['categorie_state'] = newCategorie.categorie_state;
+      request.send().then((resopnse) {
+        if (resopnse.statusCode == 200) {
+          print("Upload Data Ok");
+          dataAdded = true;
+          notifyListeners();
+        } else {
+          print("Error to Upload Data:${resopnse.statusCode} ");
+        }
+      });
+    }
+  }
 
-    request.send().then((resopnse) {
-      if (resopnse.statusCode == 200) {
-        print("Upload Data Ok");
-        dataAdded = true;
-        notifyListeners();
-      } else {
-        print("Error to Upload Data:${resopnse.statusCode} ");
-      }
-    });
+  Future updateCategories(
+      CategoriesModel newCategorie, File newCategoriImage) async {
+    if (newCategoriImage != null) {
+      var stream =
+          http.ByteStream(DelegatingStream.typed(newCategoriImage.openRead()));
+      var length = await newCategoriImage.length();
+      var url = Uri.parse("https://mashhadsafari.com/tmp/editcategory.php");
+      var request = http.MultipartRequest("POST", url);
+      var multipartFile = http.MultipartFile("categorie_icon", stream, length,
+          filename: basename(newCategoriImage.path));
+      request.files.add(multipartFile);
+      request.fields['categorie_id'] = newCategorie.categorie_id;
+      request.fields['categoie_name'] = newCategorie.categoie_name;
+      request.fields['categorie_des'] = newCategorie.categorie_des;
+      request.fields['categorie_state'] = newCategorie.categorie_state;
+      request.send().then((resopnse) {
+        if (resopnse.statusCode == 200) {
+          print("Edit Data Ok");
+          dataAdded = true;
+          notifyListeners();
+        } else {
+          print("Error to Edit Data:${resopnse.statusCode} ");
+        }
+      });
+    } else {
+      ///
+
+      var url = Uri.parse("https://mashhadsafari.com/tmp/editcategory.php");
+      var request = http.MultipartRequest("POST", url);
+      request.fields['categorie_id'] = newCategorie.categorie_id;
+      request.fields['categoie_name'] = newCategorie.categoie_name;
+      request.fields['categorie_des'] = newCategorie.categorie_des;
+      request.fields['categorie_icon'] = newCategorie.categorie_icon;
+      request.fields['categorie_state'] = newCategorie.categorie_state;
+      request.send().then((resopnse) {
+        if (resopnse.statusCode == 200) {
+          print("Edit Data Ok");
+          dataAdded = true;
+          notifyListeners();
+        } else {
+          print("Error to Edit Data:${resopnse.statusCode} ");
+        }
+      });
+
+      ///
+
+    }
   }
 
 // delete Categori with Picture file

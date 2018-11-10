@@ -8,18 +8,39 @@ import 'package:image/image.dart' as Img;
 
 import '../model/mainmodel.dart';
 import '../models/categories_model.dart';
+import '../pages/home.dart';
 
 class AddCategorie extends StatefulWidget {
   bool categoriState = true;
   int catindex;
   CategoriesModel newCategorie;
   List<CategoriesModel> categorilist;
-  File newCategoriImage;
+
   AddCategorie({this.catindex, this.categorilist});
   _AddCategorieState createState() => _AddCategorieState();
 }
 
 class _AddCategorieState extends State<AddCategorie> {
+  @override
+  initState() {
+    if (widget.categorilist != null) {
+      _categoienameController.text =
+          widget.categorilist[widget.catindex].categoie_name;
+      _categoriedesController.text =
+          widget.categorilist[widget.catindex].categorie_des;
+      widget.categoriState =
+          widget.categorilist[widget.catindex].categorie_state == "true";
+      _catimage = widget.categorilist[widget.catindex].categorie_icon;
+
+      _saveButtonText = "تغییر مشخصات";
+      _isUpdatePage = true;
+    }
+    super.initState();
+  }
+
+  bool _isUpdatePage = false;
+  File _cateImageFile;
+  String _catimage, _saveButtonText = "ثبت اطلاعات";
   TextEditingController _categoienameController = TextEditingController();
   TextEditingController _categoriedesController = TextEditingController();
 
@@ -28,15 +49,38 @@ class _AddCategorieState extends State<AddCategorie> {
     final tempDir = await getTemporaryDirectory();
     final path = tempDir.path;
     int rand = Math.Random().nextInt(10000);
-    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
-    Img.Image smallerImg = Img.copyResize(image, 500);
+    if (imageFile != null) {
+      Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
+      Img.Image smallerImg = Img.copyResize(image, 500);
 
-    var compressImg = File("$path/categorie_image_$rand.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 85));
+      var compressImg = File("$path/categorie_image_$rand.jpg")
+        ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 85));
 
-    setState(() {
-      widget.newCategoriImage = compressImg;
-    });
+      setState(() {
+        _cateImageFile = compressImg;
+      });
+    }
+  }
+
+  chekImage() {
+    // no new file and empty icon show defult icon
+    if (_cateImageFile == null && (_catimage == null || _catimage == "")) {
+      return AssetImage('images/noimage.png');
+    }
+    // has file and have icon show File
+    // else if (_cateImageFile != null && _catimage != null) {
+    //   return FileImage(_cateImageFile);
+    // }
+    // no file and has icon show icon
+    else if (_cateImageFile == null && _catimage != null) {
+      return NetworkImage('https://mashhadsafari.com/tmp/cat_image/$_catimage');
+    }
+// has file and no icon show file
+    else if (_cateImageFile != null && (_catimage == null || _catimage == "")) {
+      return FileImage(_cateImageFile);
+    } else {
+      return FileImage(_cateImageFile);
+    }
   }
 
   @override
@@ -67,7 +111,9 @@ class _AddCategorieState extends State<AddCategorie> {
                       height: 120.0,
                       width: 185.0,
                       child: GestureDetector(
-                        onTap: getImageGallery,
+                        onTap: () {
+                          getImageGallery();
+                        },
                         child: DecoratedBox(
                           decoration: ShapeDecoration(
                               shadows: [
@@ -77,10 +123,7 @@ class _AddCategorieState extends State<AddCategorie> {
                               ],
                               color: Colors.amber,
                               image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: widget.newCategoriImage == null
-                                      ? AssetImage('images/noimage.png')
-                                      : FileImage(widget.newCategoriImage)),
+                                  fit: BoxFit.cover, image: chekImage()),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0))),
                         ),
@@ -155,24 +198,37 @@ class _AddCategorieState extends State<AddCategorie> {
                   ),
                   OutlineButton.icon(
                     icon: Icon(Icons.add),
-                    label: Text("ثبت اطلاعات"),
+                    label: Text(_saveButtonText),
                     borderSide:
                         BorderSide(color: Colors.tealAccent, width: 2.0),
                     splashColor: Colors.tealAccent,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0)),
                     onPressed: () {
-                      _categoriedesController.text;
+                     // make Model with id for add new
+                      if (_isUpdatePage) {
+                        CategoriesModel newcatd = new CategoriesModel(
+                            categorie_id: widget
+                                .categorilist[widget.catindex].categorie_id,
+                            categorie_icon: widget
+                                .categorilist[widget.catindex].categorie_icon,
+                            categoie_name: _categoienameController.text,
+                            categorie_des: _categoriedesController.text,
+                            categorie_state: widget.categoriState.toString());
+                        model.updateCategories(newcatd, _cateImageFile);
+                      }
+                      //make model without id for edit category with own id
+                      else {
+                        CategoriesModel newcatd = new CategoriesModel(
+                            categoie_name: _categoienameController.text,
+                            categorie_des: _categoriedesController.text,
+                            categorie_state: widget.categoriState.toString());
+                        model.addCategories(newcatd, _cateImageFile);
+                      }
 
-                      CategoriesModel newcatd = new CategoriesModel(
-                          categoie_name: _categoienameController.text,
-                          categorie_des: _categoriedesController.text,
-                          categorie_state: widget.categoriState.toString());
-
-                      model.addCategories(newcatd, widget.newCategoriImage);
-                      print(model.dataAdded);
-                      if(model.dataAdded) {
-                        Navigator.pop(context);
+                      if (model.dataAdded) {
+                      
+                       Navigator.pop(context);
                       }
                     },
                   ),
