@@ -25,6 +25,7 @@ dependencies:
   path_provider: ^0.4.1
   image: ^2.0.4
   transparent_image: ^0.1.0
+  barcode_scan: ^0.0.7
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +47,9 @@ flutter:
   assets:
   - images/noimage.png
   - images/Bars-1s-200px.gif
+  - images/catback.jpg
+  - images/proback.jpg
+  - images/mainback.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
@@ -59,9 +63,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-  - family: BRoya
+  - family: BYekan
     fonts:
-      - asset: fonts/BRoya.ttf
+      - asset: fonts/BYekan.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

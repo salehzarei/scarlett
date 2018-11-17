@@ -6,7 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as Img;
 
-import '../model/mainmodel.dart';
+import '../scoped/mainmodel.dart';
 import '../models/categories_model.dart';
 import '../pages/home.dart';
 
@@ -43,6 +43,7 @@ class _AddCategorieState extends State<AddCategorie> {
   String _catimage, _saveButtonText = "ثبت اطلاعات";
   TextEditingController _categoienameController = TextEditingController();
   TextEditingController _categoriedesController = TextEditingController();
+  
 
   Future getImageGallery() async {
     var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -96,6 +97,7 @@ class _AddCategorieState extends State<AddCategorie> {
                     "ویرایش دسته بندی ${widget.categorilist[widget.catindex].categoie_name}",
                     textDirection: TextDirection.rtl,
                   ),
+                  backgroundColor: Theme.of(context).backgroundColor,
             centerTitle: true,
           ),
           body: SingleChildScrollView(
@@ -133,6 +135,7 @@ class _AddCategorieState extends State<AddCategorie> {
                   Padding(
                     padding: EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Form(
+                      autovalidate: true,
                         child: ListBody(
                       mainAxis: Axis.vertical,
                       children: <Widget>[
@@ -140,6 +143,7 @@ class _AddCategorieState extends State<AddCategorie> {
                           padding: const EdgeInsets.only(
                               left: 8.0, right: 8.0, top: 10.0),
                           child: TextField(
+                            
                             controller: _categoienameController,
                             style: Theme.of(context)
                                 .inputDecorationTheme

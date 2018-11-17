@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/categories_model.dart';
+import '../models/product_model.dart';
 
 class MainModel extends Model {
   List<DropdownMenuItem<String>> dropDownItem = [];
   List<String> dropDownItmes = [];
   List<CategoriesModel> categoriData = [];
+  List<ProductModel> productData = [];
   bool dataAdded = true;
   bool isLoading = false;
 
@@ -41,6 +43,36 @@ class MainModel extends Model {
     isLoading = false;
     notifyListeners();
     return categoriData;
+  }
+
+  Future fetchProducts() async {
+    productData.clear();
+    isLoading = true;
+    notifyListeners();
+    final response =
+        await http.get('https://mashhadsafari.com/tmp/getproducts.php');
+    List<dynamic> data = json.decode(response.body);
+    ProductModel products = ProductModel();
+    data.forEach((dynamic protdata) {
+      products = ProductModel(
+          product_id: protdata['product_id'].toString(),
+          product_name: protdata['product_name'],
+          product_category: protdata['product_category'],
+          product_des: protdata['product_des'],
+          product_color: protdata['product_color'],
+          product_size: protdata['product_size'],
+          product_barcode: protdata['product_barcode'],
+          product_image: protdata['product_image'],
+          product_count: protdata['product_count'],
+          product_price_buy: protdata['product_price_buy'],
+          product_price_sell: protdata['product_price_sell']);
+      productData.add(products);
+      notifyListeners();
+    });
+
+    isLoading = false;
+    notifyListeners();
+    return productData;
   }
 
   loadListItem() {
