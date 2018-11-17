@@ -21,6 +21,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String selectMenuItem;
   CategoriesModel categorieData;
+  final menu = new Menu(
+    items: [
+      MenuItem(id: 'categories', title: 'دسته بندی'),
+      MenuItem(id: 'mystore', title: 'محصولات من'),
+      MenuItem(id: 'sell', title: 'آمار فروش'),
+      MenuItem(id: 'setting', title: 'تنظیمات')
+    ],
+  );
 
   @override
   void initState() {
@@ -28,13 +36,24 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  var selectedMenuId = 'categories';
   var activeScreen = categoriesScreen;
 
   @override
   Widget build(BuildContext context) {
     return ZoomScaffold(
-      contentScreen: activeScreen,
-      menuScreen: MenuScreen()
-    );
+        contentScreen: activeScreen,
+        menuScreen: MenuScreen(
+          selectedItemId: selectedMenuId,
+          menu: menu,
+          onMenuItemSelected: (String itemId) {
+            selectedMenuId = itemId;
+            if (itemId == 'categories') {
+              setState(() => activeScreen = categoriesScreen);
+            } else {
+              setState(() => activeScreen = productScreen);
+            }
+          },
+        ));
   }
 }

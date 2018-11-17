@@ -2,47 +2,52 @@ import 'package:flutter/material.dart';
 import '../pages/zoomsacaffold.dart';
 
 class MenuScreen extends StatefulWidget {
+  final Menu menu;
+  final String selectedItemId;
+  final Function(String) onMenuItemSelected;
+
+  const MenuScreen({this.menu, this.onMenuItemSelected, this.selectedItemId});
+
   _MenuScreenState createState() => _MenuScreenState();
 }
 
-_menuItems(MenuController menucontroller) {
-  final titles = ['دسته بندی', 'محصولات من', 'فروش', 'کاربران'];
-  final selectedIndex = 0;
-  final animationIntervalDuration = 0.5;
-  final List<Widget> listitems = [];
-  final perListItemDelay =
-      menucontroller.state != MenuState.closing ? 0.15 : 0.0;
+class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
+  _menuItems(MenuController menucontroller) {
+    final animationIntervalDuration = 0.5;
+    final List<Widget> listitems = [];
+    final perListItemDelay =
+        menucontroller.state != MenuState.closing ? 0.15 : 0.0;
 
-  for (var i = 0; i < titles.length; ++i) {
-    final animationIntervalStart = perListItemDelay * i;
-    final animationInterbalEnd =
-        animationIntervalStart + animationIntervalDuration;
-    listitems.add(
-      AnimationMenuListItem(
-        menuState: menucontroller.state,
-        duration: Duration(milliseconds: 600),
-        curve: Interval(animationIntervalStart, animationInterbalEnd,
-            curve: Curves.easeOut),
-        menuListItem: _MenuItems(
-          title: titles[i],
-          isSelected: i == selectedIndex,
-          onTap: () {
-            menucontroller.close();
-          },
+    for (var i = 0; i < widget.menu.items.length; ++i) {
+      final animationIntervalStart = perListItemDelay * i;
+      final animationInterbalEnd =
+          animationIntervalStart + animationIntervalDuration;
+      listitems.add(
+        AnimationMenuListItem(
+          menuState: menucontroller.state,
+          duration: Duration(milliseconds: 600),
+          curve: Interval(animationIntervalStart, animationInterbalEnd,
+              curve: Curves.easeOut),
+          menuListItem: _MenuItems(
+            title: widget.menu.items[i].title,
+            isSelected: widget.menu.items[i].id == widget.selectedItemId,
+            onTap: () {
+              widget.onMenuItemSelected(widget.menu.items[i].id);
+              menucontroller.close();
+            },
+          ),
         ),
+      );
+    }
+
+    return Transform(
+      transform: Matrix4.translationValues(0.0, 235.0, 0.0),
+      child: Column(
+        children: listitems,
       ),
     );
   }
 
-  return Transform(
-    transform: Matrix4.translationValues(0.0, 235.0, 0.0),
-    child: Column(
-      children: listitems,
-    ),
-  );
-}
-
-class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   AnimationController titleAnimationController;
 
   @override
@@ -204,4 +209,17 @@ class _MenuItems extends StatelessWidget {
       ),
     );
   }
+}
+
+class Menu {
+  final List<MenuItem> items;
+
+  Menu({this.items});
+}
+
+class MenuItem {
+  final String id;
+  final String title;
+
+  MenuItem({this.id, this.title});
 }
