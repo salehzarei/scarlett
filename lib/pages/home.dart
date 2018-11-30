@@ -6,10 +6,10 @@ import '../scoped/mainmodel.dart';
 import '../models/categories_model.dart';
 import '../pages/addoreditCategories.dart';
 import '../pages/barcode_scanner.dart';
-import '../pages/zoomsacaffold.dart';
+import '../menu/zoomsacaffold.dart';
 import '../pages/product_screen.dart';
 import '../pages/categories_screen.dart';
-import '../pages/menu_screen.dart';
+import '../menu/menu_screen.dart';
 
 class Home extends StatefulWidget {
   MainModel model;
@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String selectMenuItem;
-  CategoriesModel categorieData;
+ 
   final menu = new Menu(
     items: [
       MenuItem(id: 'categories', title: 'دسته بندی'),
@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     widget.model.fetchCategories();
+    widget.model.fetchProducts();
     super.initState();
   }
 

@@ -26,6 +26,9 @@ dependencies:
   image: ^2.0.4
   transparent_image: ^0.1.0
   barcode_scan: ^0.0.7
+  intl: ^0.15.7
+
+
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +53,9 @@ flutter:
   - images/catback.jpg
   - images/proback.jpg
   - images/mainback.jpg
+  - images/priscilla.jpg
+  - images/feed.jpg
+  - images/samuel.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

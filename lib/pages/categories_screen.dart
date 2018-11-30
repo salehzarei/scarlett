@@ -4,16 +4,27 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped/mainmodel.dart';
 import '../pages/addoreditCategories.dart';
 import '../pages/home.dart';
-import '../pages/zoomsacaffold.dart';
+import '../menu/zoomsacaffold.dart';
 
 final Screen categoriesScreen = Screen(
     title: "لیست دسته بندی ها",
     background: DecorationImage(
-        image: AssetImage('images/catback.jpg'),
+        image: AssetImage('images/samuel.jpg'),
         fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Colors.black26, BlendMode.multiply)),
+      //  colorFilter: ColorFilter.mode(Colors.white, BlendMode.overlay)
+      ),
     contentBuilder: (BuildContext context) {
-      return _showList();
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton(
+        onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AddCategorie())), 
+          backgroundColor: Theme.of(context).buttonColor,
+          child: Icon(Icons.add , color: Colors.white,),
+        ),
+
+        body: _showList(),
+      );
+
     });
 
 Widget _showList() {
