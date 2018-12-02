@@ -35,14 +35,13 @@ class _BackDropScreenState extends State<BackDropScreen> {
     setState(() {
       _selectedCategoriId = selecteditem;
       print("Run Backdrop for load new data CatId :${_selectedCategoriId}");
-      runNewBackScreen(_selectedCategoriId);
     });
   }
 
   _categoryName(String categoryName) {
     setState(() {
       _productCategoriTitle = categoryName;
-      //   print(_productCategori);
+      //   print(_productCategoriTitle);
     });
   }
 
@@ -50,10 +49,6 @@ class _BackDropScreenState extends State<BackDropScreen> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (context, child, model) {
-        //  if (widget.categoryId != "0") {
-        //   _selectedCategoriId = widget.categoryId;
-        //   model.fetchSelectedProducts(_selectedCategoriId);
-        // }
         return BackDrop(
           forntLayer: FrontLy(
             model: model,
@@ -81,12 +76,6 @@ class FrontLy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
- print("Run FrontLy curretId : ${currentID}");
-    if (currentID != "0") {
-      model.fetchSelectedProducts(currentID);
-    } 
-    
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: MakeProductGridView(
@@ -108,10 +97,4 @@ class FrontLy extends StatelessWidget {
       ),
     );
   }
-}
-
-runNewBackScreen(categoryId) {
-  BackDropScreen(
-    categoryId: categoryId,
-  );
 }

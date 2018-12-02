@@ -21,6 +21,10 @@ class MainModel extends Model {
   List<ProductModel> selectedProductData = [];
   bool dataAdded = true;
   bool isLoading = false;
+  bool isLoadingProductData = false;
+  bool isLoadingAllProduct = false;
+
+
 
   Future fetchCategories() async {
     categoriData.clear();
@@ -51,7 +55,7 @@ class MainModel extends Model {
 
   Future fetchProducts() async {
     productData.clear();
-    isLoading = true;
+    isLoadingAllProduct = true;
     notifyListeners();
     final response =
         await http.get('https://mashhadsafari.com/tmp/getproducts.php');
@@ -74,7 +78,7 @@ class MainModel extends Model {
       notifyListeners();
     });
 
-    isLoading = false;
+    isLoadingAllProduct = false;
     notifyListeners();
     return productData;
   }
@@ -82,7 +86,7 @@ class MainModel extends Model {
   Future fetchSelectedProducts(String categoryid) async {
     print("Run Fetch for $categoryid");
     selectedProductData.clear();
-    isLoading = true;
+    isLoadingProductData = true;
     notifyListeners();
     final response =
         await http.get('https://mashhadsafari.com/tmp/getproducts.php');
@@ -104,14 +108,11 @@ class MainModel extends Model {
 
       if (products.product_category == categoryid) {
         selectedProductData.add(products);
-        print("Found:${products.product_category}");
-      } else
-        print("NotFound");
-
+      }
       notifyListeners();
     });
 
-    isLoading = false;
+    isLoadingProductData = false;
     notifyListeners();
     return productData;
   }

@@ -45,7 +45,7 @@ class _ProductCardState extends State<ProductCard> {
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text("جزئیات")
+                    Text("بارکد : ${widget.model.selectedProductData[widget.index].product_barcode}")
                   ],
                 ),
               ),

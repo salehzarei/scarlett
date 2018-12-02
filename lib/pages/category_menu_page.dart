@@ -22,7 +22,8 @@ class CategoryMenuPage extends StatelessWidget {
         onTap: () {
           onCategoryTap(model.categoriData[index].categorie_id);
           categoryName(model.categoriData[index].categoie_name);
-        },
+          model.fetchSelectedProducts(model.categoriData[index].categorie_id);
+             },
         child: category == model.categoriData[index].categoie_name
             ? Column(
                 children: <Widget>[
@@ -60,7 +61,6 @@ class CategoryMenuPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Run Category Menu Page id : $currentcategoryID ");
     return Center(
       child: Container(
         padding: EdgeInsets.only(top: 40.0),

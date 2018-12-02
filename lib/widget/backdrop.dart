@@ -32,7 +32,6 @@ class _BackDropState extends State<BackDrop>
   
   @override
   void initState() {
-    print("Run backdrop");
     super.initState();
     _controller = AnimationController(
       duration: Duration(milliseconds: 300),
