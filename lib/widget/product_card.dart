@@ -37,15 +37,20 @@ class _ProductCardState extends State<ProductCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.isAllProduct ?
-                      widget.model.productData[widget.index].product_name
-                      :widget.model.selectedProductData[widget.index].product_name,
+                      widget.isAllProduct
+                          ? widget.model.productData[widget.index].product_name
+                          : widget.model.selectedProductData[widget.index]
+                              .product_name,
                       maxLines: 1,
                     ),
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text("بارکد : ${widget.model.selectedProductData[widget.index].product_barcode}")
+                    widget.isAllProduct
+                        ? Text(
+                            "بارکد : ${widget.model.productData[widget.index].product_barcode}")
+                        : Text(
+                            "بارکد : ${widget.model.selectedProductData[widget.index].product_barcode}")
                   ],
                 ),
               ),

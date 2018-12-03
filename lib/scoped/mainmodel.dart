@@ -54,6 +54,7 @@ class MainModel extends Model {
   }
 
   Future fetchProducts() async {
+    print("fetchAllPro");
     productData.clear();
     isLoadingAllProduct = true;
     notifyListeners();
@@ -84,7 +85,7 @@ class MainModel extends Model {
   }
 
   Future fetchSelectedProducts(String categoryid) async {
-    print("Run Fetch for $categoryid");
+   // print("Run Fetch for $categoryid");
     selectedProductData.clear();
     isLoadingProductData = true;
     notifyListeners();

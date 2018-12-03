@@ -18,23 +18,39 @@ final productScreen = Screen(
         image: AssetImage('images/proback.jpg'),
         fit: BoxFit.cover),
     contentBuilder: (BuildContext context) {
-      return BackDropScreen(
-        categoryId: _selectedCategoriId,
+      return ScopedModelDescendant<MainModel>(
+        builder: (context,child,model){
+          return BackDropScreen(
+          categoryId: _selectedCategoriId,
+          model :model
+        );
+        },
+               
       );
     });
 
 class BackDropScreen extends StatefulWidget {
   final String categoryId;
-  BackDropScreen({this.categoryId});
+  final MainModel model;
+  BackDropScreen({this.categoryId , this.model});
 
   _BackDropScreenState createState() => _BackDropScreenState();
 }
 
 class _BackDropScreenState extends State<BackDropScreen> {
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.model.fetchProducts();
+  //   print("fetch all whene : ID is ${widget.categoryId} ");
+  // }
+
+  
   _selectedItem(String selecteditem) {
     setState(() {
       _selectedCategoriId = selecteditem;
-      print("Run Backdrop for load new data CatId :${_selectedCategoriId}");
+     // print("Run Backdrop for load new data CatId :${_selectedCategoriId}");
     });
   }
 

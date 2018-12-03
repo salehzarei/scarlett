@@ -14,29 +14,32 @@ class MakeProductGridView extends StatefulWidget {
 }
 
 class _MakeProductGridViewState extends State<MakeProductGridView> {
-  @override
-  void initState() {
-    super.initState();
-    widget.model.fetchProducts();
-  }
-
+  bool isAllProduct = false;
   @override
   Widget build(BuildContext context) {
     if (widget.currentcategoryID == "0") {
+      
+     isAllProduct = true;
       // return All Product List
-      return widget.model.isLoadingAllProduct ? Center(child: CircularProgressIndicator(),) : GridView.builder(
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemCount: widget.model.productData.length,
-        padding: EdgeInsets.all(16.0),
-        itemBuilder: (BuildContext context, int index) {
-          return ProductCard(
-            model: widget.model,
-            isAllProduct: true,
-            index: index,
-          );
-        },
-      );
+      if (widget.model.productData.length != 0) {
+        return GridView.builder(
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          itemCount: widget.model.productData.length,
+          padding: EdgeInsets.all(16.0),
+          itemBuilder: (BuildContext context, int index) {
+            return ProductCard(
+              model: widget.model,
+              isAllProduct: isAllProduct,
+              index: index,
+            );
+          },
+        );
+      } else {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
     } else {
       return widget.model.isLoadingProductData
           ? Center(child: CircularProgressIndicator())
@@ -44,8 +47,6 @@ class _MakeProductGridViewState extends State<MakeProductGridView> {
               categoryid: widget.currentcategoryID,
               model: widget.model,
             );
-          }
+    }
   }
 }
-
-
