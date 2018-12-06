@@ -9,6 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:image/image.dart' as Img;
 
 import '../models/product_model.dart';
+import '../models/categories_model.dart';
 import '../scoped/mainmodel.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -19,6 +20,7 @@ class AddorEditProduct extends StatefulWidget {
 
 class _AddorEditProductState extends State<AddorEditProduct> {
   var selectMenuItem;
+  String selectedCategoriID;
   File newProductImage;
   bool _isEditing = false;
   bool _autoValidate = false;
@@ -188,7 +190,7 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                         onPressed: () {
                           ProductModel newProduct = ProductModel(
                               product_name: _productNameController.text,
-                              product_category: selectMenuItem,
+                              product_category: selectedCategoriID,
                               product_des: _productDescriptionController.text,
                               product_size: _productSizeController.text,
                               product_color: _productColorController.text,
@@ -366,12 +368,10 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                             items: model.loadListItem(),
                             onChanged: (value) {
                               selectMenuItem = value;
-                              //  باعث بروز شدن وضعیت منو می شود
+                              //  Find Category ID for send to Add new Product
                               setState(() {
-                                model.giveSelectedMenuItem(selectMenuItem);
-                                // اجرای یک تابع در اسکوپ
-                                // model.fetchCategories();
-                              });
+                               selectedCategoriID = model.findSelectedCategoryID(selectMenuItem);
+                                });
                             },
                           ))
                     ],

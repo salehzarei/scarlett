@@ -24,8 +24,6 @@ class MainModel extends Model {
   bool isLoadingProductData = false;
   bool isLoadingAllProduct = false;
 
-
-
   Future fetchCategories() async {
     categoriData.clear();
     isLoading = true;
@@ -85,7 +83,7 @@ class MainModel extends Model {
   }
 
   Future fetchSelectedProducts(String categoryid) async {
-   // print("Run Fetch for $categoryid");
+    // print("Run Fetch for $categoryid");
     selectedProductData.clear();
     isLoadingProductData = true;
     notifyListeners();
@@ -132,8 +130,13 @@ class MainModel extends Model {
     return dropDownItem;
   }
 
-  giveSelectedMenuItem(selectedItem) {
-    print(selectedItem);
+  findSelectedCategoryID(selectedItem) {
+    String findindex, finded;
+    categoriData.forEach((catdata) {
+      findindex = catdata.categoie_name;
+      if (findindex == selectedItem) finded = catdata.categorie_id;
+    });
+    return finded;
   }
 
   Future addCategories(
