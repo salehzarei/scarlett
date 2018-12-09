@@ -6,6 +6,7 @@ import './scoped/mainmodel.dart';
 
 import './pages/home.dart';
 
+
 main() {
   MainModel model = MainModel();
 
@@ -31,6 +32,7 @@ main() {
     '/': (BuildContext context) => Home(
           model: model,
         ),
+    
   },
     ),
     ));

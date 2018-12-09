@@ -4,7 +4,8 @@ import 'package:async/async.dart';
 import 'package:path/path.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
-
+import 'package:soundpool/soundpool.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,11 +15,13 @@ import '../models/product_model.dart';
 
 class MainModel extends Model {
   List<DropdownMenuItem<String>> dropDownItem = [];
-  String scanshow = "نتیجه اسکن";
+  String scanshow ;
   List<String> dropDownItmes = [];
   List<CategoriesModel> categoriData = [];
   List<ProductModel> productData = [];
   List<ProductModel> selectedProductData = [];
+  List<ProductModel> selectedProductInBasket = [];
+
   bool dataAdded = true;
   bool isLoading = false;
   bool isLoadingProductData = false;
@@ -311,9 +314,14 @@ class MainModel extends Model {
   }
 
   /// Barcode Scanner
+  String get scanResult {
+    barcodeScan();
+    notifyListeners();
+    return scanshow;
+  }
 
   Future barcodeScan() async {
-    try {
+     try {
       String scanresult = await BarcodeScanner.scan();
       scanshow = int.parse(scanresult).toString();
     } on PlatformException catch (e) {
@@ -327,6 +335,15 @@ class MainModel extends Model {
     } catch (e) {
       scanshow = 'خطای نامشخص : $e';
     }
-    return scanshow;
+   
+ Soundpool pool = Soundpool(streamType: StreamType.notification);
+
+    int soundId = await rootBundle.load("sounds/shutter.m4a").then((ByteData soundData) {
+                  return pool.load(soundData);
+                });
+    int streamId = await pool.play(soundId, repeat: 4);
+    print('Playing sound with stream id: $streamId');
+    notifyListeners();
   }
+  
 }

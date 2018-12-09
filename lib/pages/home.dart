@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import '../scoped/mainmodel.dart';
-import '../models/categories_model.dart';
-import '../pages/addoreditCategories.dart';
-import '../pages/barcode_scanner.dart';
 import '../menu/zoomsacaffold.dart';
 import '../pages/product_screen.dart';
 import '../pages/categories_screen.dart';
+import '../pages/sell_basket.dart';
+import '../pages/sell_reports.dart';
 import '../menu/menu_screen.dart';
 
 class Home extends StatefulWidget {
-  MainModel model;
+  final MainModel model;
   Home({this.model});
   // bool _switchValue = true;
   _HomeState createState() => _HomeState();
@@ -20,13 +17,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   String selectMenuItem;
- 
+
   final menu = new Menu(
     items: [
       MenuItem(id: 'categories', title: 'دسته بندی'),
       MenuItem(id: 'mystore', title: 'محصولات من'),
-      MenuItem(id: 'sell', title: 'آمار فروش'),
-      MenuItem(id: 'setting', title: 'تنظیمات')
+      MenuItem(id: 'sellBasketScreen', title: 'سبد فروش'),
+      MenuItem(id: 'sellReport', title: 'گزارش فروش')
     ],
   );
 
@@ -51,8 +48,12 @@ class _HomeState extends State<Home> {
             selectedMenuId = itemId;
             if (itemId == 'categories') {
               setState(() => activeScreen = categoriesScreen);
-            } else {
+            } else if (itemId == 'mystore') {
               setState(() => activeScreen = productScreen);
+            } else if (itemId == 'sellBasketScreen') {
+              setState(() => activeScreen = sellBasketScreen);
+            } else if (itemId == 'sellReport') {
+              setState(() => activeScreen = sellReports);
             }
           },
         ));

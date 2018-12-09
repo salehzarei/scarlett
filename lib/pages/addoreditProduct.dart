@@ -122,16 +122,18 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                 label: Text("بیخیال !"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context)=> Home()
-                  ));
+                      builder: (BuildContext context) => Home()));
                 },
               ),
               FlatButton.icon(
-                icon: Icon(Icons.add,color: Colors.pink.shade700,),
-                label: Text('محصول جدید', style:TextStyle(color: Colors.pink.shade700 , )
-                 ),
-              
-
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.pink.shade700,
+                ),
+                label: Text('محصول جدید',
+                    style: TextStyle(
+                      color: Colors.pink.shade700,
+                    )),
               )
             ],
           ),
@@ -185,7 +187,7 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                   ScopedModelDescendant<MainModel>(
                     builder: (context, child, model) {
                       return RaisedButton(
-                        color: Colors.greenAccent,
+                        color: Colors.pink,
                         child: Text("ثبت محصول"),
                         onPressed: () {
                           ProductModel newProduct = ProductModel(
@@ -202,7 +204,7 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                                   _productSellPriceController.text);
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
-                          //  _showDialog();
+                            //  _showDialog();
                             model.addProduct(newProduct, newProductImage);
                             setState(() {
                               _autoValidate = true;
@@ -370,8 +372,9 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                               selectMenuItem = value;
                               //  Find Category ID for send to Add new Product
                               setState(() {
-                               selectedCategoriID = model.findSelectedCategoryID(selectMenuItem);
-                                });
+                                selectedCategoriID = model
+                                    .findSelectedCategoryID(selectMenuItem);
+                              });
                             },
                           ))
                     ],
@@ -531,8 +534,13 @@ class _AddorEditProductState extends State<AddorEditProduct> {
                               borderRadius: BorderRadius.circular(15.0),
                               splashColor: Colors.pink,
                               onTap: () {
-                                model.barcodeScan();
-                                _productBarcodeController.text = model.scanshow;
+                                String result;
+                                result = model.scanResult;
+                                print("SCAN RESULT: $result");
+                                if (result != null)
+                                  setState(() {
+                                    _productBarcodeController.text = result;
+                                  });
                               },
                               child: Row(
                                 children: <Widget>[

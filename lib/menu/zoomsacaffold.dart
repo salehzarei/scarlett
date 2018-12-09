@@ -3,8 +3,8 @@ import 'package:scarlett/pages/barcode_scanner.dart';
 import '../menu/menu_screen.dart';
 
 class ZoomScaffold extends StatefulWidget {
-  Screen contentScreen;
-  Widget menuScreen;
+ final Screen contentScreen;
+ final  Widget menuScreen;
 
   ZoomScaffold({this.contentScreen, this.menuScreen});
 
