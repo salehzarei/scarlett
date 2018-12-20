@@ -5,22 +5,24 @@ import 'package:path/path.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
-import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/categories_model.dart';
 import '../models/product_model.dart';
+import '../models/payment_model.dart';
 
 class MainModel extends Model {
   List<DropdownMenuItem<String>> dropDownItem = [];
-  String scanshow ;
+  String scanshow;
   List<String> dropDownItmes = [];
   List<CategoriesModel> categoriData = [];
   List<ProductModel> productData = [];
   List<ProductModel> selectedProductData = [];
   List<ProductModel> selectedProductInBasket = [];
+  int totalPrice = 0;
+  List<String> sellProductsList = [];
 
   bool dataAdded = true;
   bool isLoading = false;
@@ -199,25 +201,24 @@ class MainModel extends Model {
       var multipartFile = http.MultipartFile("product_image", stream, length,
           filename: basename(newProductImage.path));
       request.files.add(multipartFile);
-      print(newProductImage);
+
       request.fields['product_name'] = newProduct.product_name;
-      print(newProduct.product_name);
+
       request.fields['product_category'] = newProduct.product_category;
-      print(newProduct.product_category);
+
       request.fields['product_des'] = newProduct.product_des;
-      print(newProduct.product_des);
+
       request.fields['product_color'] = newProduct.product_color;
-      print(newProduct.product_color);
+
       request.fields['product_size'] = newProduct.product_size;
-      print(newProduct.product_size);
+
       request.fields['product_barcode'] = newProduct.product_barcode;
-      print(newProduct.product_barcode);
+
       request.fields['product_count'] = newProduct.product_count;
-      print(newProduct.product_count);
+
       request.fields['product_price_buy'] = newProduct.product_price_buy;
-      print(newProduct.product_price_buy);
+
       request.fields['product_price_sell'] = newProduct.product_price_sell;
-      print(newProduct.product_price_sell);
 
       request.send().then((resopnse) {
         if (resopnse.statusCode == 200) {
@@ -321,7 +322,7 @@ class MainModel extends Model {
   }
 
   Future barcodeScan() async {
-     try {
+    try {
       String scanresult = await BarcodeScanner.scan();
       scanshow = int.parse(scanresult).toString();
     } on PlatformException catch (e) {
@@ -335,15 +336,38 @@ class MainModel extends Model {
     } catch (e) {
       scanshow = 'خطای نامشخص : $e';
     }
-   
- Soundpool pool = Soundpool(streamType: StreamType.notification);
 
-    int soundId = await rootBundle.load("sounds/shutter.m4a").then((ByteData soundData) {
-                  return pool.load(soundData);
-                });
+    Soundpool pool = Soundpool(streamType: StreamType.notification);
+
+    int soundId =
+        await rootBundle.load("sounds/shutter.m4a").then((ByteData soundData) {
+      return pool.load(soundData);
+    });
     int streamId = await pool.play(soundId, repeat: 4);
     print('Playing sound with stream id: $streamId');
     notifyListeners();
   }
-  
+
+////// Add Selled Product information
+
+  Future addSelledProduct(PaymentModel paymentedInfo) async {
+    var url = Uri.parse("https://mashhadsafari.com/tmp/addsellinfo.php");
+    var request = http.MultipartRequest("POST", url);
+    request.fields['buyer_name'] = paymentedInfo.buyerName;
+    request.fields['buyer_number'] = paymentedInfo.byerNumber;
+    request.fields['total_price'] = paymentedInfo.totalPrice.toString();
+    request.fields['card_payded'] = paymentedInfo.cardPay.toString();
+    request.fields['cash_payded'] = paymentedInfo.cashPay.toString();
+    request.fields['product_list'] = paymentedInfo.productList.toString();
+    request.fields['sell_date'] = paymentedInfo.payDate.toString();
+    request.send().then((resopnse) {
+      if (resopnse.statusCode == 200) {
+        print("Upload Selled Data");
+        // dataAdded = true;
+        notifyListeners();
+      } else {
+        print("Error to Upload Selled Data:${resopnse.statusCode} ");
+      }
+    });
+  }
 }

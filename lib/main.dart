@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 
@@ -8,6 +9,9 @@ import './pages/home.dart';
 
 
 main() {
+  SystemChrome.setPreferredOrientations(
+[ DeviceOrientation.portraitUp]
+  );
   MainModel model = MainModel();
 
   runApp(ScopedModel<MainModel>(
@@ -34,6 +38,7 @@ main() {
         ),
     
   },
+
     ),
     ));
 }

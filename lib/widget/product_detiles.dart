@@ -3,8 +3,11 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product_model.dart';
 import '../scoped/mainmodel.dart';
+
 import '../pages/sell_basket.dart';
 import '../menu/menu_screen.dart';
+import '../pages/home.dart';
+import '../menu/zoomsacaffold.dart';
 
 class ProductDetiels extends StatelessWidget {
   final ProductModel findedProduct;
@@ -160,9 +163,7 @@ class ProductDetiels extends StatelessWidget {
                         ),
                         onTap: () {
                           model.selectedProductInBasket.add(findedProduct);
-                          print(
-                              "ADDed to bascket :${findedProduct.product_name}");
-                          
+                        
                         },
                       );
                     },

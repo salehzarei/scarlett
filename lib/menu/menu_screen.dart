@@ -314,7 +314,6 @@ class _MenuItems extends StatelessWidget {
 
 class Menu {
   final List<MenuItem> items;
-
   Menu({this.items});
 }
 

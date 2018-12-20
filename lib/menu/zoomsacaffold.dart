@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scarlett/pages/barcode_scanner.dart';
-import '../menu/menu_screen.dart';
+
 
 class ZoomScaffold extends StatefulWidget {
  final Screen contentScreen;

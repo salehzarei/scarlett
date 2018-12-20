@@ -8,15 +8,23 @@ import '../pages/sell_basket.dart';
 import '../pages/sell_reports.dart';
 import '../menu/menu_screen.dart';
 
+
+
 class Home extends StatefulWidget {
   final MainModel model;
-  Home({this.model});
+  final String selectedMenuId;
+
+  Home({this.model, this.selectedMenuId , Key key});
   // bool _switchValue = true;
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   String selectMenuItem;
+  var selectedMenuId;
+  var activeScreen;
+  // var selectedMenuId = 'categories';
+  // var activeScreen = categoriesScreen;
 
   final menu = new Menu(
     items: [
@@ -29,18 +37,28 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    super.initState();
+    // if (widget.selectedMenuId != null) {
+
+    //   selectedMenuId = widget.selectedMenuId;
+    //   activeScreen = sellBasketScreen;
+    // } else {
+    //   widget.model.fetchCategories();
+    //   widget.model.fetchProducts();
+    //   selectedMenuId = 'categories';
+    //   activeScreen = categoriesScreen;
+    // }
+
     widget.model.fetchCategories();
     widget.model.fetchProducts();
-    super.initState();
+    selectedMenuId = 'categories';
+    activeScreen = categoriesScreen;
   }
-
-  var selectedMenuId = 'categories';
-  var activeScreen = categoriesScreen;
 
   @override
   Widget build(BuildContext context) {
     return ZoomScaffold(
-        contentScreen: activeScreen,
+      contentScreen: activeScreen,
         menuScreen: MenuScreen(
           selectedItemId: selectedMenuId,
           menu: menu,
